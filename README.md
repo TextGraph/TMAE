@@ -9,7 +9,7 @@ The framework of TMAE is as below:
 
 ## Dataset
 
-We use the public datasets [TaxiBj](https://github.com/yoshall/UrbanFM/tree/master/data),[ChengDu and XiAn](https://github.com/luimoli/RATFM/tree/master/data).
+The data.zip file is from the public datasets [TaxiBj](https://github.com/yoshall/UrbanFM/tree/master/data),[ChengDu and XiAn](https://github.com/luimoli/RATFM/tree/master/data). Many thanks to the authors.
 
 ```
 # Example of directory structure for datasets
