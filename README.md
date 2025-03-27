@@ -14,18 +14,12 @@ The data.zip file is from the public datasets [TaxiBj](https://github.com/yoshal
 ```
 # Example of directory structure for datasets
 XiAn
-<your_root_path>/data/XiAn/train/
-                                X.npy    # coarse-grained traffic flow maps
-                                Y.npy    # fine-grained traffic flow maps
-                                ext.npy  # external factor vector
-<your_root_path>/data/XiAn/valid/
-                                X.npy    # coarse-grained traffic flow maps
-                                Y.npy    # fine-grained traffic flow maps
-                                ext.npy  # external factor vector
-<your_root_path>/data/XiAn/test/
-                                X.npy    # coarse-grained traffic flow maps
-                                Y.npy    # fine-grained traffic flow maps
-                                ext.npy  # external factor vector
+<your_root_path>/data/XiAn/train/Y.npy    # fine-grained traffic flow maps
+
+<your_root_path>/data/XiAn/valid/Y.npy    # fine-grained traffic flow maps
+
+<your_root_path>/data/XiAn/test/Y.npy    # fine-grained traffic flow maps
+
 ```
 
 ## Usage
