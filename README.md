@@ -30,7 +30,7 @@ XiAn
 ### 1. Clone the repository
 
 ```bash
-git clone git@github.com:TextGraph/TMAE.git
+git clone https://github.com/TextGraph/TMAE.git
 cd tmae
 ```
 
