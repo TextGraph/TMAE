@@ -14,9 +14,15 @@ The datasets are from the public datasets [TaxiBj](https://github.com/yoshall/Ur
 ```
 # Example of Dataset Directory Structure
 XiAn
-<your_root_path>/data/XiAn/train/Y.npy    # fine-grained traffic flow maps
-<your_root_path>/data/XiAn/valid/Y.npy    # fine-grained traffic flow maps
-<your_root_path>/data/XiAn/test/Y.npy     # fine-grained traffic flow maps
+<your_root_path>/data/XiAn/train/
+                                X.npy    # coarse-grained traffic flow maps
+                                Y.npy    # fine-grained traffic flow maps
+<your_root_path>/data/XiAn/valid/
+                                X.npy
+                                Y.npy
+<your_root_path>/data/XiAn/test/
+                                X.npy
+                                Y.npy
 ```
 
 ## Usage
