@@ -12,7 +12,7 @@ The framework of TMAE is as below:
 The datasets are created from the public datasets [TaxiBj](https://github.com/yoshall/UrbanFM/tree/master/data) and [ChengDu and XiAn](https://github.com/luimoli/RATFM/tree/master/data). Many thanks to the authors.
 
 ```
-# Example directory structure of datasets
+# Example of Dataset Directory Structure
 XiAn
 <your_root_path>/data/XiAn/train/Y.npy    # fine-grained traffic flow maps
 <your_root_path>/data/XiAn/valid/Y.npy    # fine-grained traffic flow maps
