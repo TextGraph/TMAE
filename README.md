@@ -2,27 +2,21 @@
 
 ## Introduction
 
-This is the source code for "TMAE: Entropy-aware Masked Autoencoder for Low-cost Traffic Flow Map Inference".
+This is the datasets and source code for "TMAE: Entropy-aware Masked Autoencoder for Low-cost Traffic Flow Map Inference".
 
 The framework of TMAE is as below:
 ![tmae-model](https://github.com/user-attachments/assets/d5316372-fbe0-46c0-831a-6fa5a25b064b)
 
 ## Dataset
 
-We use the public datasets [TaxiBj](https://github.com/yoshall/UrbanFM/tree/master/data),[ChengDu and XiAn](https://github.com/luimoli/RATFM/tree/master/data).
+The datasets are created from the public datasets [TaxiBj](https://github.com/yoshall/UrbanFM/tree/master/data) and [ChengDu and XiAn](https://github.com/luimoli/RATFM/tree/master/data). Many thanks to the authors.
 
 ```
-# Example of file construction
+# Example directory structure of datasets
 XiAn
-<your_root_path>/data/XiAn/train/
-                                X.npy    # coarse-grained traffic flow maps
-                                Y.npy    # fine-grained traffic flow maps
-<your_root_path>/data/XiAn/valid/
-                                X.npy
-                                Y.npy
-<your_root_path>/data/XiAn/test/
-                                X.npy
-                                Y.npy
+<your_root_path>/data/XiAn/train/Y.npy    # fine-grained traffic flow maps
+<your_root_path>/data/XiAn/valid/Y.npy    # fine-grained traffic flow maps
+<your_root_path>/data/XiAn/test/Y.npy     # fine-grained traffic flow maps
 ```
 
 ## Usage
