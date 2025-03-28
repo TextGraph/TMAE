@@ -32,9 +32,9 @@ def get_args_parser():
     parser.set_defaults(norm_pix_loss=False)
 
     # Dataset parameters
-    parser.add_argument('--data_path', default='ChengDu', type=str,
+    parser.add_argument('--data_path', default='P1', type=str,
                         help='dataset path')
-    parser.add_argument('--channel', default='2', type=int,
+    parser.add_argument('--channel', default='1', type=int,
                         help='dataset path')
     parser.add_argument('--output_dir', default='./output',
                         help='path where to save, empty for no saving')
@@ -66,7 +66,7 @@ def main(args):
     cuda = True if torch.cuda.is_available() else False
     cudnn.benchmark = True
 
-    datapath=os.path.join('/home/wq/FUFI/data',args.data_path)
+    datapath=os.path.join('/data',args.data_path)
     dataset_train=Dataset(datapath,channel=args.channel)
     dataset_valid=Dataset(datapath,'valid',channel=args.channel)
     dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)

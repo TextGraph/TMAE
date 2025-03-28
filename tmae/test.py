@@ -69,9 +69,9 @@ def main(args):
     dataset_valid=Dataset(datapath,'test',channel=channel)
     dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)
     dataloader_valid=DataLoader(dataset_valid, batch_size=16, shuffle=False,drop_last=True)
-
+    out_path=os.path.join(args.output_dir,args.data_path)
     model = models_maeroad.__dict__[args.model](norm_pix_loss=args.norm_pix_loss)
-    model.load_state_dict(torch.load('model_path'))
+    model.load_state_dict(torch.load(f'{out_path}/final_model.pt'))
     def print_model_parm_nums(model, str):
         total_num = sum([param.nelement() for param in model.parameters()])
         print('{} params: {}'.format(str, total_num))
