@@ -254,18 +254,21 @@ class MaskedAutoencoderViT(nn.Module):
 
         # return loss
 
+#The following function is for TaxiBJ
 def mae_vit_base_patch4_dec512d8b(**kwargs):
     model = MaskedAutoencoderViT(
         img_size=128,patch_size=4,in_chans=1, embed_dim=384, depth=6, num_heads=6,
         decoder_embed_dim=256, decoder_depth=8, decoder_num_heads=4,
         mlp_ratio=4, norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
     return model
-def mae_vit_base_patch4_dec512d8b(**kwargs):
-    model = MaskedAutoencoderViT(
-        img_size=64,patch_size=2,in_chans=2, embed_dim=384, depth=6, num_heads=6,
-        decoder_embed_dim=256, decoder_depth=8, decoder_num_heads=4,
-        mlp_ratio=4, norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
-    return model
+
+# The following function is is for XiAN and Chengdu
+# def mae_vit_base_patch4_dec512d8b(**kwargs):
+#     model = MaskedAutoencoderViT(
+#         img_size=64,patch_size=2,in_chans=2, embed_dim=384, depth=6, num_heads=6,
+#         decoder_embed_dim=256, decoder_depth=8, decoder_num_heads=4,
+#         mlp_ratio=4, norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
+#     return model
 mae_vit_base_patch4 = mae_vit_base_patch4_dec512d8b
 model = MaskedAutoencoderViT()
 model.forward_encoder
