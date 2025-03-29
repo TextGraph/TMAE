@@ -1,5 +1,5 @@
 # TMAE
-
+## Please wait two days. After we changed the command line, there is a bug need to be fixed. Thank you for your patienc.
 ## Introduction
 
 This is the datasets and source code for "TMAE: Entropy-aware Masked Autoencoder for Low-cost Traffic Flow Map Inference".
