@@ -80,9 +80,8 @@ class Residual_OneD_Block(nn.Module):
         return x + self.conv_block(x)
 
 class RoadNet(nn.Module):
-    def __init__(self,road_channels=1,patch_size=2,base_channels=64):
+    def __init__(self,road_channels=1,patch_size=4,base_channels=64):
         super(RoadNet,self).__init__()
-        # print(patch_size)
         self.encoder = nn.Sequential(
                 nn.Conv2d(road_channels, base_channels, patch_size, stride=patch_size),
                 nn.ReLU(inplace=True),         
@@ -96,6 +95,4 @@ class RoadNet(nn.Module):
     
     def forward(self,roadmap):
         rout = self.encoder(roadmap)
-        # print(f'rout:{rout.shape}')
-        # rout_pool = self.road_down_pool(rout)
         return rout

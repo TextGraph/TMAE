@@ -51,6 +51,11 @@ def get_args_parser():
     parser.add_argument('--blr', type=float, default=2e-4, metavar='LR',
                         help='base learning rate: absolute_lr = base_lr * total_batch_size / 256')
     
+    parser.add_argument('--patch_size', type=int, default=4,
+                        help='the size of the patch')
+    parser.add_argument('--img_size', type=int, default=128,
+                        help='the size of the flow')
+    
     return  parser
     
 def main(args):
@@ -66,13 +71,13 @@ def main(args):
     cuda = True if torch.cuda.is_available() else False
     cudnn.benchmark = True
 
-    datapath=os.path.join('/data',args.data_path)
+    datapath=os.path.join('D:\\项目\\TMAE\\tmae\\data',args.data_path)
     dataset_train=Dataset(datapath,channel=args.channel)
     dataset_valid=Dataset(datapath,'valid',channel=args.channel)
     dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)
     dataloader_valid=DataLoader(dataset_valid, batch_size=16, shuffle=False,drop_last=True)
 
-    bei_road_path = 'road_map/beij1.png'
+    bei_road_path = 'D:\\项目\\TMAE\\tmae\\road_map/beij1.png'
     road_map = torch.from_numpy(np.expand_dims(cv2.resize(np.array(PIL.ImageOps.invert(Image.open(bei_road_path).convert('L'))), (128,128), interpolation=cv2.INTER_LINEAR), 0)).float().to(device)
     road_map=road_map.reshape(1,road_map.shape[0],road_map.shape[1],road_map.shape[2])
 
@@ -99,7 +104,7 @@ def main(args):
         img=img.reshape(N,-1)
         norm_p=torch.nn.functional.normalize(img, dim=1)
         norm_p=norm_p.reshape(N,C,W,H)
-        patches=patchify(norm_p,2)     
+        patches=patchify(norm_p,args.patch_size)     
         entropy=-(patches*torch.log2(patches))
         entropy[entropy.isnan()]=0
         entropy=entropy.sum(dim=2)
