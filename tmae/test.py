@@ -35,6 +35,8 @@ def get_args_parser():
                         help='device to use for training / testing')
     parser.add_argument('--seed', default=2017, type=int)
 
+    parser.add_argument('--output_dir', default='output', type=str)
+
     return  parser
     
 def main(args):
@@ -64,7 +66,7 @@ def main(args):
         channel=1
     road_map=road_map.reshape(1,road_map.shape[0],road_map.shape[1],road_map.shape[2]).float().to(device)
 
-    datapath=os.path.join('data_path',args.data_path)
+    datapath=os.path.join('data',args.data_path)
     dataset_train=Dataset(datapath,channel=channel)
     dataset_valid=Dataset(datapath,'test',channel=channel)
     dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)

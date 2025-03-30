@@ -71,13 +71,13 @@ def main(args):
     cuda = True if torch.cuda.is_available() else False
     cudnn.benchmark = True
 
-    datapath=os.path.join('D:\\项目\\TMAE\\tmae\\data',args.data_path)
+    datapath=os.path.join('data',args.data_path)
     dataset_train=Dataset(datapath,channel=args.channel)
     dataset_valid=Dataset(datapath,'valid',channel=args.channel)
     dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)
     dataloader_valid=DataLoader(dataset_valid, batch_size=16, shuffle=False,drop_last=True)
 
-    bei_road_path = 'D:\\项目\\TMAE\\tmae\\road_map/beij1.png'
+    bei_road_path = 'road_map/beij1.png'
     road_map = torch.from_numpy(np.expand_dims(cv2.resize(np.array(PIL.ImageOps.invert(Image.open(bei_road_path).convert('L'))), (128,128), interpolation=cv2.INTER_LINEAR), 0)).float().to(device)
     road_map=road_map.reshape(1,road_map.shape[0],road_map.shape[1],road_map.shape[2])
 
