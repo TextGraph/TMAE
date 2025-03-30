@@ -30,7 +30,7 @@ XiAn
 ### 1. Clone the repository
 
 ```bash
-git clone git@github.com:TextGraph/TMAE.git
+git clone https://github.com/TextGraph/TMAE.git
 cd tmae
 ```
 
@@ -56,29 +56,29 @@ python train.py --epochs 400 --batch_size 16 --model mae_vit_base_patch4 --norm_
 
 Explanation:
 
-- epochs:Number of training epochs (default: 400).
+- epochs: Number of training epochs (default: 400).
 
-- batch_size:Batch size per GPU (default: 16).
+- batch_size: Batch size per GPU (default: 16).
 
-- model:Specifies the model to train (default: mae_vit_base_patch4).
+- model: Specifies the model to train (default: mae_vit_base_patch4).
 
-- norm_pix_loss:normalized pixel loss (not included means it remains disabled).
+- norm_pix_loss: normalized pixel loss (not included means it remains disabled).
 
-- data_path:Dataset path (default: P1).
+- data_path: Dataset path (default: P1).
 
-- channel:Number of channels (default: 1).
+- channel: Number of channels (default: 1).
 
-- output_dir:Output directory for saving results (default: ./output).
+- output_dir: Output directory for saving results (default: ./output).
 
-- device:Device for training/testing (default: cuda).
+- device: Device for training/testing (default: cuda).
 
-- seed:Random seed for reproducibility (default: 2017).
+- seed: Random seed for reproducibility (default: 2017).
 
-- weight_decay:Weight decay for optimization (default: 0.05).
+- weight_decay: Weight decay for optimization (default: 0.05).
 
-- lr:Learning rate (default is None, so you need to specify it).
+- lr: Learning rate (default is None, so you need to specify it).
 
-- blr:Base learning rate (default: 2e-4).
+- blr: Base learning rate (default: 2e-4).
 
 ### 4. test
 
@@ -93,12 +93,12 @@ python test.py --batch_size 16 --model mae_vit_base_patch4 --norm_pix_loss \
 
 Explanation:
 
-- batch_size:Batch size per GPU (default: 16).
+- batch_size: Batch size per GPU (default: 16).
 
-- model:Specifies the model to train (default: mae_vit_base_patch4).
+- model: Specifies the model to test (default: mae_vit_base_patch4).
 
-- norm_pix_loss:normalized pixel loss (not included means it remains disabled).
+- norm_pix_loss: normalized pixel loss (not included means it remains disabled).
 
-- data_path:Dataset path (default: P1).
+- data_path: Dataset path (default: P1).
 
-- seed:Random seed for reproducibility (default: 2017).
+- seed: Random seed for reproducibility (default: 2017).
