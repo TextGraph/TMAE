@@ -1,5 +1,5 @@
 # TMAE
-## Please wait for two days. After we changed the command line, a bug needs to be fixed. Thank you for your patience.
+
 ## Introduction
 
 This is the datasets and source code for "TMAE: Entropy-aware Masked Autoencoder for Low-cost Traffic Flow Map Inference".
@@ -30,7 +30,7 @@ XiAn
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/TextGraph/TMAE.git
+git clone git@github.com:TextGraph/TMAE.git
 cd tmae
 ```
 
@@ -44,6 +44,10 @@ To run train.py with specified hyperparameters, use the following command:
 
 ```
 python train.py #default P1
+
+python train.py --data_path P1 --channel 1 --patch_size 4 --model mae_vit_base_patch4
+python train.py --data_path ChengDu --channel 2 --patch_size 2 --model mae_vit_base_patch2
+python train.py --data_path XiAn --channel 2 --patch_size 2 --model mae_vit_base_patch2
 
 python train.py --epochs 400 --batch_size 16 --model mae_vit_base_patch4 --norm_pix_loss \
 --data_path P1 --channel 1 --output_dir ./output --device cuda --seed 2017 \
