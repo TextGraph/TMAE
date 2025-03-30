@@ -49,9 +49,6 @@ python train.py --data_path P1 --channel 1 --patch_size 4 --model mae_vit_base_p
 python train.py --data_path ChengDu --channel 2 --patch_size 2 --model mae_vit_base_patch2
 python train.py --data_path XiAn --channel 2 --patch_size 2 --model mae_vit_base_patch2
 
-python train.py --epochs 400 --batch_size 16 --model mae_vit_base_patch4 --norm_pix_loss \
---data_path P1 --channel 1 --output_dir ./output --device cuda --seed 2017 \
---weight_decay 0.05 --lr 0.001 --blr 2e-4
 ```
 
 Explanation:
