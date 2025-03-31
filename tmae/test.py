@@ -37,6 +37,9 @@ def get_args_parser():
 
     parser.add_argument('--output_dir', default='output', type=str)
 
+    parser.add_argument('--patch_size', type=int, default=4,
+                        help='the size of the patch')
+
     return  parser
     
 def main(args):
@@ -99,7 +102,7 @@ def main(args):
         norm_p=torch.nn.functional.normalize(img, dim=1)
         norm_p=norm_p.reshape(N,C,W,H)
 
-        patches=patchify(norm_p,4)  
+        patches=patchify(norm_p,args.patch_size)  
         # print(patches.shape)        
         entropy=-(patches*torch.log2(patches))
         entropy[entropy.isnan()]=0
