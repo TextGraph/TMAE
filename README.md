@@ -82,10 +82,10 @@ Explanation:
 To run test.py with specified hyperparameters, use the following command:
 
 ```
-
 python test.py #default P1
-python test.py --batch_size 16 --model mae_vit_base_patch4 --norm_pix_loss \
---data_path P1 --device cuda --seed 2017
+python test.py --model mae_vit_base_patch4 --data_path P1 --patch_size 4
+python test.py --model mae_vit_base_patch2 --data_path ChengDu --patch_size 2
+python test.py --model mae_vit_base_patch2 --data_path XiAn --patch_size 2
 ```
 
 Explanation:
