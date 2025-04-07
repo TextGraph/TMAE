@@ -31,18 +31,13 @@ class MaskedAutoencoderViT(nn.Module):
                  mlp_ratio=4., norm_layer=nn.LayerNorm, norm_pix_loss=False,self_attn=False,
                  ):
         super().__init__()
-
-        # --------------------------------------------------------------------------
-        # MAE encoder specifics
         self.img_size = img_size
         self.patch_size = patch_size
         self.embed_dim = embed_dim
         self.decoder_embed_dim = decoder_embed_dim
-
         self.patch_embed = PatchEmbed(img_size, patch_size, in_chans, embed_dim) 
         num_patches = self.patch_embed.num_patches
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
-
         self.blocks = nn.ModuleList([
             Block(embed_dim, num_heads, mlp_ratio, qkv_bias=True, qk_scale=None, norm_layer=norm_layer)
             for i in range(depth)])
@@ -50,48 +45,33 @@ class MaskedAutoencoderViT(nn.Module):
         # --------------------------------------------------------------------------
         self.decoder_embed = nn.Linear(embed_dim, decoder_embed_dim, bias=True)
         # --------------------------------------------------------------------------
-        # MAE decoder specifics
         self.self_attn=self_attn
         self.decoder_blocks = nn.ModuleList([
             CrossAttentionBlock(embed_dim, decoder_embed_dim, decoder_num_heads, mlp_ratio, qkv_bias=True, qk_scale=None, norm_layer=norm_layer, self_attn=self_attn)
             for i in range(decoder_depth)])
-
         self.decoder_norm = norm_layer(decoder_embed_dim)
-        self.decoder_pred = nn.Linear(decoder_embed_dim, patch_size**2 * in_chans, bias=True) # decoder to patch
+        self.decoder_pred = nn.Linear(decoder_embed_dim, patch_size**2 * in_chans, bias=True)
         # --------------------------------------------------------------------------
-        # Dealing with positional embedding, patch sampling 
-        # encoder
         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, embed_dim), requires_grad=False)  # fixed sin-cos embedding
         # decoder 
         self.decoder_pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, decoder_embed_dim), requires_grad=False)  # fixed sin-cos embedding
         # --------------------------------------------------------------------------
         self.road_net=RoadNet(patch_size=patch_size,base_channels=embed_dim)
-
         self.norm_pix_loss = norm_pix_loss
-
         self.initialize_weights()
 
     def initialize_weights(self):
-        # initialization
         pos_embed = get_2d_sincos_pos_embed(self.pos_embed.shape[-1], int(self.patch_embed.num_patches**.5), cls_token=True)
         self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
-
         decoder_pos_embed = get_2d_sincos_pos_embed(self.decoder_pos_embed.shape[-1], int(self.patch_embed.num_patches**.5), cls_token=True)
         self.decoder_pos_embed.data.copy_(torch.from_numpy(decoder_pos_embed).float().unsqueeze(0))
-
-        # initialize patch_embed like nn.Linear (instead of nn.Conv2d)
         w = self.patch_embed.proj.weight.data
         torch.nn.init.xavier_uniform_(w.view([w.shape[0], -1]))
-
-        # timm's trunc_normal_(std=.02) is effectively normal_(std=0.02) as cutoff is too big (2.)
         torch.nn.init.normal_(self.cls_token, std=.02)
-
-        # initialize nn.Linear and nn.LayerNorm
         self.apply(self._init_weights)
 
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):
-            # we use xavier_uniform following official JAX ViT:
             torch.nn.init.xavier_uniform_(m.weight)
             if isinstance(m, nn.Linear) and m.bias is not None:
                 nn.init.constant_(m.bias, 0)
@@ -127,10 +107,10 @@ class MaskedAutoencoderViT(nn.Module):
         return imgs
 
     def attention_masking(self,x,attention,road,mask_ratio):
-        N, L, D = x.shape  # batch, length, dim
-        keep_n = int(L * (1-mask_ratio)) #遮蔽
-        ids_shuffle = torch.argsort(attention, dim=1,descending=True)  # 降序
-        ids_restore = torch.argsort(ids_shuffle, dim=1) # 还原下标
+        N, L, D = x.shape 
+        keep_n = int(L * (1-mask_ratio)) 
+        ids_shuffle = torch.argsort(attention, dim=1,descending=True) 
+        ids_restore = torch.argsort(ids_shuffle, dim=1)
         ids_keep=ids_shuffle[:,:keep_n]
         ids_drop=ids_shuffle[:,keep_n:]
         mask = torch.ones([N, L], device=x.device)
@@ -216,7 +196,7 @@ class MaskedAutoencoderViT(nn.Module):
             er_sum = (target[i] - pred[i]).abs().sum()
             mape=(er_sum / gt_sum).cpu().detach().numpy()
             mapes.append(mape)
-        mapes=np.mean(mapes)
+        mape=np.mean(mapes)
         assert np.isnan(mse.cpu().detach().numpy())==False
         return mse,mae,mape
 
@@ -228,7 +208,7 @@ class MaskedAutoencoderViT(nn.Module):
             if i%2==0:
                 entropy=ent.unsqueeze(0).repeat(imgs.shape[0],1)
                 latent, mask, ids_restore= self.forward_encoder(x,entropy,road,mask_ratio)
-                pred, combined = self.forward_decoder(latent, mask, ids_restore, mask_ratio)  # [N, L, p*p*3] [16, 768, 16]
+                pred, combined = self.forward_decoder(latent, mask, ids_restore, mask_ratio)
             else:
                 if mode=='att':
                     _,attention_flow=self.forward_encoder_test(x)#[16, 8, 1025, 1025]
@@ -236,9 +216,8 @@ class MaskedAutoencoderViT(nn.Module):
                 elif mode=='random':
                     attention_flow=torch.rand(N, L, device=x.device)
                 latent, mask, ids_restore= self.forward_encoder(x,attention_flow,road,mask_ratio)
-                pred, combined = self.forward_decoder(latent, mask, ids_restore,  mask_ratio)  # [N, L, p*p*3] [16, 768, 16]
+                pred, combined = self.forward_decoder(latent, mask, ids_restore,  mask_ratio)
             loss = self.forward_loss(imgs, pred, mask)
-
             return loss
 
     def forward_test(self, imgs,entropy,road_map,mask_ratio=0.75):
@@ -247,12 +226,10 @@ class MaskedAutoencoderViT(nn.Module):
             road=self.road_net(road_map).expand(16,-1,-1)
             entropy=entropy.unsqueeze(0).repeat(imgs.shape[0],1)
             latent, mask, ids_restore= self.forward_encoder(x,entropy,road,mask_ratio)
-            pred, combined = self.forward_decoder(latent, mask, ids_restore, mask_ratio)  # [N, L, p*p*3] [16, 768, 16]
+            pred, combined = self.forward_decoder(latent, mask, ids_restore, mask_ratio)
             mse,mae,mape = self.forward_metric(imgs,pred, mask)
-
             return mse,mae,mape
 
-        # return loss
 
 def mae_vit_base_patch4_dec512d8b(**kwargs):
     model = MaskedAutoencoderViT(

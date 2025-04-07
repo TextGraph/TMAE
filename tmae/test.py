@@ -58,7 +58,6 @@ def main(args):
         road_path = 'road_map/cdu1.png'
         road_map = torch.from_numpy(np.expand_dims(cv2.resize(np.flip(np.array(PIL.ImageOps.invert(Image.open(road_path).convert('L'))), 0), (64,64), interpolation=cv2.INTER_LINEAR), 0))
         channel=2
-        # print('here')
     elif args.data_path=='XiAn':
         road_path = 'road_map/xian1.png'
         road_map = torch.from_numpy(np.expand_dims(cv2.resize(np.flip(np.array(PIL.ImageOps.invert(Image.open(road_path).convert('L'))), 0), (64,64), interpolation=cv2.INTER_LINEAR), 0))
@@ -69,11 +68,11 @@ def main(args):
         channel=1
     road_map=road_map.reshape(1,road_map.shape[0],road_map.shape[1],road_map.shape[2]).float().to(device)
 
-    datapath=os.path.join('data',args.data_path)
+    datapath=os.path.join('/home/wq/FUFI/data',args.data_path)
     dataset_train=Dataset(datapath,channel=channel)
     dataset_valid=Dataset(datapath,'test',channel=channel)
-    dataloader_train=DataLoader(dataset_train, batch_size=16, shuffle=True,drop_last=True)
-    dataloader_valid=DataLoader(dataset_valid, batch_size=16, shuffle=False,drop_last=True)
+    dataloader_train=DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True,drop_last=True)
+    dataloader_valid=DataLoader(dataset_valid, batch_size=args.batch_size, shuffle=False,drop_last=True)
     out_path=os.path.join(args.output_dir,args.data_path)
     model = models_maeroad.__dict__[args.model](norm_pix_loss=args.norm_pix_loss)
     model.load_state_dict(torch.load(f'{out_path}/final_model.pt'))
@@ -101,13 +100,10 @@ def main(args):
         img=img.reshape(N,-1)
         norm_p=torch.nn.functional.normalize(img, dim=1)
         norm_p=norm_p.reshape(N,C,W,H)
-
-        patches=patchify(norm_p,args.patch_size)  
-        # print(patches.shape)        
+        patches=patchify(norm_p,args.patch_size)       
         entropy=-(patches*torch.log2(patches))
         entropy[entropy.isnan()]=0
         entropy=entropy.sum(dim=2)
-        # print(entropy.sum())
         return entropy
     entropy_all=torch.zeros(1024).to('cuda')
     with tqdm(range(len(dataloader_train))) as pbar:
@@ -118,6 +114,7 @@ def main(args):
     entropy=entropy_all
 
     total_mse, total_mae, total_mape = 0, 0, 0
+    model.eval()
     for j, (_,v_flow_f,v_ext) in enumerate(dataloader_valid):
         mse,mae,mape= model.forward_test(v_flow_f,entropy,road_map)
         total_mse += mse.cpu().detach().numpy() * len(v_flow_f)
